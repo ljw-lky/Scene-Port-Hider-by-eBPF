@@ -10,12 +10,6 @@ if [[ ! -f "$ROOT/system/bin/hideport_loader" ]]; then
     exit 1
 fi
 
-if [[ ! -f "$ROOT/system/bin/hideport.bpf.o" ]]; then
-    echo "Missing BPF object: $ROOT/system/bin/hideport.bpf.o" >&2
-    echo "Run ./build.sh first." >&2
-    exit 1
-fi
-
 fingerprint="$ROOT/kernel_btf.sha256"
 btf_source=""
 for candidate in "$ROOT/btf/vmlinux.btf" "$ROOT/vmlinux.btf"; do
@@ -43,11 +37,9 @@ fi
         post-fs-data.sh
         service.sh
         hideport_start.sh
-        hide_scene_port.sh
         customize.sh
         uninstall.sh
-        service.d
-        system
+        system/bin/hideport_loader
     )
     if [[ -f kernel_btf.sha256 ]]; then
         files+=(kernel_btf.sha256)
